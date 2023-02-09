@@ -1,0 +1,70 @@
+schema {
+    query: Query
+}
+
+type Sector {
+    id: ID!
+    name: String!
+    reference: Int
+}
+
+type Code {
+    id: ID!
+    nace: String!
+}
+
+type Objective{
+    id: ID!
+    name: String!
+    longName: String
+    key: String!
+}
+
+type Activity {
+    id: ID!
+    name: String!
+    description: String
+    reference: Float
+    sector: Sector
+    nace: Code
+}
+
+type DNSH{
+    objective: Objective
+    criteria: [String]
+}
+
+type ActivityMainObjectives{
+    activity: Activity
+    objective: Objective
+    activityContributionType: String
+    contributionDescription: String
+    dnsh: [DNSH]
+    substantialContributionCriteria: [String]
+}
+
+type ActivityMainObjectivesResult {
+    success: Boolean!
+    errors: [String]
+    activityMainObjectives: [ActivityMainObjectives]
+}
+
+type ActivityResult {
+    success: Boolean!
+    errors: [String]
+    activity: Activity
+}
+
+type ActivitiesResult {
+    success: Boolean!
+    errors: [String]
+    activities: [Activity]
+}
+
+type Query {
+    listActivities: ActivitiesResult!
+    getActivity(name: ID!): ActivityResult!
+    getActivityMainObjectivesByID(id: ID!): ActivityMainObjectivesResult!
+    getActivityMainObjectivesByName(name: String!): ActivityMainObjectivesResult!
+    getActivityAllMainObjectives: ActivityMainObjectivesResult!
+}

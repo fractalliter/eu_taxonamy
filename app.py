@@ -7,7 +7,7 @@ from flask import Flask
 import os
 from resolver.activity import get_activity_resolver, list_activities_resolver, \
     get_activity_main_objectives_by_id_resolver, get_activity_main_objectives_by_name_resolver, \
-        get_activity_main_objectives_all_resolver
+    get_activity_main_objectives_all_resolver
 from service.integration import Integration, populate_database
 from dao.database_factory import db
 import requests
@@ -16,9 +16,9 @@ app = Flask(__name__)
 
 logger = app.logger
 
-app.config["DB_URL"] = os.getenv("DB_URL")
-app.config["DB_USERNAME"] = os.getenv("DB_USERNAME")
-app.config["DB_PASSWORD"] = os.getenv("DB_PASSWORD")
+app.config["DB_URL"] = os.getenv("DB_URL") or "localhost"
+app.config["DB_USERNAME"] = os.getenv("DB_USERNAME") or "neo4j"
+app.config["DB_PASSWORD"] = os.getenv("DB_PASSWORD") or "9VXuvxKAWuV9RTW"
 
 type_defs = load_schema_from_path("schema/eu_taxonamy.graphql")
 
@@ -37,7 +37,8 @@ query.set_field("getActivityMainObjectivesByID",
                 get_activity_main_objectives_by_id_resolver)
 query.set_field("getActivityMainObjectivesByName",
                 get_activity_main_objectives_by_name_resolver)
-query.set_field("getActivityAllMainObjectives",get_activity_main_objectives_all_resolver)
+query.set_field("getActivityAllMainObjectives",
+                get_activity_main_objectives_all_resolver)
 
 schema = make_executable_schema(
     type_defs, query, snake_case_fallback_resolvers

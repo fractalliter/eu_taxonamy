@@ -1,4 +1,5 @@
 from neo4j import GraphDatabase
+from os import getenv
 
 
 class DatabaseFactory:
@@ -14,4 +15,8 @@ class DatabaseFactory:
         self.driver.close()
 
 
-db = DatabaseFactory("bolt://localhost:7687", "neo4j", "9VXuvxKAWuV9RTW")
+db = DatabaseFactory(
+    f'bolt://{getenv("DB_URL") or "localhost"}:7687',
+    getenv("DB_USERNAME") or "neo4j",
+    getenv("DB_PASSWORD") or "9VXuvxKAWuV9RTW"
+)

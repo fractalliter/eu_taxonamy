@@ -1,0 +1,38 @@
+version: '3.4'
+
+services:
+  eutaxonamy:
+    image: eutaxonamy
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command:
+      [
+        "sh",
+        "-c",
+        "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 -m flask run --no-debugger --no-reload --host 0.0.0.0 --port 5000"
+      ]
+    ports:
+      - 5000:5000
+      - 5678:5678
+    environment:
+      - FLASK_APP=app.py
+      - DB_URL=${NEO4J_HOST}:${NEO4J_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${NEO4J_PASSWORD}
+    depends_on:
+      - neo4j
+  neo4j:
+    image: docker.io/bitnami/neo4j:5
+    environment:
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD}
+      - NEO4J_HOST${DB_HOST}
+    ports:
+      - '7474:7474'
+      - '7473:7473'
+      - '7687:7687'
+    volumes:
+      - 'neo4j_data:/bitnami'
+volumes:
+  neo4j_data:
+    driver: local

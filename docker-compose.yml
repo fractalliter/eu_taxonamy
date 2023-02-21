@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  eutaxonmay:
+    image: eutaxonmay
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      - DB_URL=neo4j
+      - DB_USERNAME=${NEO4J_USERNAME}
+      - DB_PASSWORD=${NEO4J_PASSWORD}
+    ports:
+      - 5000:5000
+    depends_on:
+      - neo4j
+
+  neo4j:
+    image: docker.io/bitnami/neo4j:5
+    environment:
+      - NEO4J_PASSWORD="haha"
+      - NEO4J_HOST="localhost"
+    ports:
+      - '7474:7474'
+      - '7473:7473'
+      - '7687:7687'
+    volumes:
+      - 'neo4j_data:/bitnami'
+volumes:
+  neo4j_data:
+    driver: local

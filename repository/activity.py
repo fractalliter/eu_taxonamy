@@ -119,19 +119,19 @@ class ActivityRepository(NamedTuple):
     def create_contribution_match_with_objective_query(tx: ManagedTransaction, activity: str, objective: str, match: dict):
         if None not in match.values():
             tx.run("MATCH (activity:Activity) WHERE activity.name = $activity_name "
-                "MATCH (objective:Objective) WHERE objective.key = $objective_key "
-                "MERGE (activity)-[:MATCHES{contribution_type:$contribution_type,description:$description}]->(objective)",
-                activity_name=activity, objective_key=objective, **match)
+                   "MATCH (objective:Objective) WHERE objective.key = $objective_key "
+                   "MERGE (activity)-[:MATCHES{contribution_type:$contribution_type,description:$description}]->(objective)",
+                   activity_name=activity, objective_key=objective, **match)
         elif match["contribution_type"]:
             tx.run("MATCH (activity:Activity) WHERE activity.name = $activity_name "
-                "MATCH (objective:Objective) WHERE objective.key = $objective_key "
-                "MERGE (activity)-[:MATCHES{contribution_type:$contribution_type}]->(objective)",
-                activity_name=activity, objective_key=objective, **match)
+                   "MATCH (objective:Objective) WHERE objective.key = $objective_key "
+                   "MERGE (activity)-[:MATCHES{contribution_type:$contribution_type}]->(objective)",
+                   activity_name=activity, objective_key=objective, **match)
         elif match["description"]:
             tx.run("MATCH (activity:Activity) WHERE activity.name = $activity_name "
-                "MATCH (objective:Objective) WHERE objective.key = $objective_key "
-                "MERGE (activity)-[:MATCHES{description:$description}]->(objective)",
-                activity_name=activity, objective_key=objective, **match)
+                   "MATCH (objective:Objective) WHERE objective.key = $objective_key "
+                   "MERGE (activity)-[:MATCHES{description:$description}]->(objective)",
+                   activity_name=activity, objective_key=objective, **match)
 
     def create(self, entity: Activity):
         return self.db.execute_query(self._create_query, entity)
